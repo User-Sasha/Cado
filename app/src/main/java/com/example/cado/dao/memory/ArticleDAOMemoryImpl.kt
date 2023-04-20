@@ -32,6 +32,15 @@ class ArticleDAOMemoryImpl: ArticleDAO {
         return article
     }
 
+    override fun update(article: Article) {
+        val index: Int?
+        index = articlesInMemory.indexOfFirst { it.id == article.id }
+        if (index!=-1)
+            articlesInMemory.set(index,article)
+        else
+            Log.i(TAG, "Article non trouvé")
+
+    }
 
 
 }

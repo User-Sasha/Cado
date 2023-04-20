@@ -5,5 +5,6 @@ import com.example.cado.bo.Article
 interface ArticleDAO {
 
     fun selectById(id: Long): Article?
+    fun update(article: Article)
 
 }

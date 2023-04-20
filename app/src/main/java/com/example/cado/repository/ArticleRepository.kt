@@ -17,4 +17,12 @@ object ArticleRepository {
         return articleDao?.selectById(id)
     }
 
+    /**
+     * Met à jour l'article à la position courante
+     * @param article
+     */
+    fun replace(article: Article){
+        articleDao?.update(article)
+    }
+
 }
