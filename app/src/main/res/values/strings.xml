@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Cado</string>
 
@@ -7,4 +8,25 @@
 
     <string name="article_view_dateachat">acheté le : </string>
 
+    <string name="alert_dialog_title">Modifier</string>
+    <string name="alert_dialog_msg">Souhaitez vous vraiment modifier cet article ?</string>
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
+
+    <string name="snackbar_msg">envoyer le message ?</string>
+    <string name="snackbar_action">envoyer</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="article_addedit_title">MODIFICATION D\'UN ARTICLE</string>
+    <string name="article_addedit_intitule_hint">Intitulé</string>
+    <string name="article_addedit_description_hint">Description</string>
+    <string name="article_addedit_prix_hint">Prix (€)</string>
+    <string name="article_addedit_url_hint">Url</string>
+
+    <string name="buttoncancel">Cancel</string>
+    <string name="validate">Validate</string>
+    <string name="internetbutton">URL</string>
+    <string name="editbutton">Modifier</string>
+    <string name="smsbutton">Send</string>
 </resources>

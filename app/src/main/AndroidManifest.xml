@@ -12,7 +12,7 @@
         android:theme="@style/Theme.Cado"
         tools:targetApi="31">
         <activity
-            android:name=".ui.articleview.ArticleViewActivity"
+            android:name=".ui.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
