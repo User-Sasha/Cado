@@ -6,7 +6,7 @@
     tools:context=".ui.articleedit.ArticleEditFragment">
 
     <data>
-        <import type="android.view.View"></import>
+        <import type="android.view.View"/>
         <import type="com.example.cado.ui.Converters"/>
         <variable
             name="article"

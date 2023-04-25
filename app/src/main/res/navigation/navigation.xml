@@ -7,7 +7,7 @@
     <fragment
         android:id="@+id/articleViewFragment"
         android:name="com.example.cado.ui.articleview.ArticleViewFragment"
-        android:label="fragment_article_view"
+        android:label="Article-Détail"
         tools:layout="@layout/fragment_article_view">
         <action
             android:id="@+id/action_articleViewFragment_to_articleEditFragment"
@@ -16,8 +16,8 @@
     <fragment
         android:id="@+id/articleEditFragment"
         android:name="com.example.cado.ui.articleedit.ArticleEditFragment"
-        android:label="fragment_article_edit"
-        tools:layout="@layout/fragment_article_edit" >
+        android:label="Article-ajout ou modification"
+        tools:layout="@layout/fragment_article_edit">
         <argument
             android:name="arg_article"
             app:argType="com.example.cado.bo.Article" />
