@@ -11,6 +11,9 @@
         <variable
             name="article"
             type="com.example.cado.bo.Article" />
+        <variable
+            name="ArticleVM"
+            type="com.example.cado.ui.articleedit.ArticleEditViewModele" />
     </data>
     <FrameLayout
         android:layout_width="match_parent"

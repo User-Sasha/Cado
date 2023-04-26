@@ -4,21 +4,22 @@ import android.app.AlertDialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.telephony.SmsManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.example.cado.R
-import com.example.cado.bo.Article
 import com.example.cado.databinding.FragmentArticleViewBinding
-import com.example.cado.repository.ArticleRepository
-import java.time.LocalDate
 
 
 /**
@@ -28,8 +29,25 @@ import java.time.LocalDate
  */
 class ArticleViewFragment : Fragment() {
     private lateinit var binding: FragmentArticleViewBinding
+    private lateinit var viewModel: ArticleViewViewModele
 
-    private lateinit var currentArticle: Article
+    val requestPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted: Boolean ->
+            if (isGranted) {
+                // Permission is granted. Continue the action or workflow in your
+                // app.
+                envoyerSms()
+            } else {
+                // Explain to the user that the feature is unavailable because the
+                // features requires a permission that the user has denied. At the
+                // same time, respect the user's decision. Don't link to system
+                // settings in an effort to convince the user to change their
+                // decision.
+                Toast.makeText(this@ArticleViewFragment.context, "Autorisation refusée !", Toast.LENGTH_SHORT).show()
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +59,8 @@ class ArticleViewFragment : Fragment() {
     ): View? {
         binding = DataBindingUtil.inflate<FragmentArticleViewBinding>(inflater, R.layout.fragment_article_view, container, false)
 
+        viewModel = ViewModelProvider(this).get(ArticleViewViewModele::class.java)
+
         return binding.root
     }
 
@@ -50,10 +70,7 @@ class ArticleViewFragment : Fragment() {
 
         // Inflate the layout for this fragment
         binding.checkBoxEtat.setOnClickListener {
-            currentArticle.achete = (it as CheckBox).isChecked
-            currentArticle.dateAchat = if (currentArticle.achete) LocalDate.now() else null
-            displayData()
-            ArticleRepository.replace(currentArticle)
+           viewModel.OnCheckedChangeAchete((it as CheckBox).isChecked)
         }
 
 
@@ -62,14 +79,13 @@ class ArticleViewFragment : Fragment() {
         }
 
 
-
         binding.imageButtonEdit.setOnClickListener {
-            val builder = AlertDialog.Builder(context)
+            val builder = AlertDialog.Builder(it.context)
             builder.setMessage("Etes vous sûr de vouloir modifier cet article ?")
                 .setCancelable(true)
                 .setPositiveButton("Oui") { dialog, id ->
 //                    val action = ArticleViewFragmentDirections
-                    val action = ArticleViewFragmentDirections.actionArticleViewFragmentToArticleEditFragment(currentArticle)
+                    val action = ArticleViewFragmentDirections.actionArticleViewFragmentToArticleEditFragment(viewModel.getCurrentArticle()!!)
                     Navigation.findNavController(it).navigate(action)
                 }
                 .setNegativeButton("Non") { dialog, id ->
@@ -83,72 +99,68 @@ class ArticleViewFragment : Fragment() {
 
 
         binding.imageButtonSMS.setOnClickListener {
-            envoyerSms()
+            preparerSms()
         }
 
 
-        //monter un article en mémoire pour le test
-        val item: Article? = ArticleRepository.getArticle(1)
-        if (item != null){
-            currentArticle = item
-            //afficher les données
-            displayData()
-        }
+        viewModel.observalbleCurrentArticle.observe(viewLifecycleOwner, {
+            Log.i("OBSERVER", "ArticleViewFragment")
+            binding.article = it
+        })
     }
 
     private fun envoyerSms() {
         var numero = "0666666666"
-        val intent = Intent(Intent.ACTION_SENDTO)
         try {
-            intent.setData(Uri.parse("smsto:$numero"))
-            intent.putExtra("sms_body", "Idée de cadeau : " + currentArticle.url)
+            val smsManager: SmsManager = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                binding.root.context.getSystemService(SmsManager::class.java)
+            } else {
+                SmsManager.getDefault()
+            }
+            smsManager.sendTextMessage(
+                numero,
+                null,
+                viewModel.getMessageSMS(),
+                null,
+                null
+            )
+            Toast.makeText(this@ArticleViewFragment.context, "SMS Envoyé", Toast.LENGTH_SHORT)
+                .show()
+        }catch (e: java.lang.Exception){
+            Toast.makeText(this@ArticleViewFragment.context, "Erreur lors de l'envoi du message", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+
+    private fun preparerSms(){
+        var numero = "0666666666"
+        val intent: Intent = Intent().apply {
+            action = Intent.ACTION_SENDTO
+//            type ="text/plain"
+//            data = Uri.parse("sms:"+numero)
+            setDataAndType(Uri.parse("sms:"+numero), "text/plain")
+            putExtra("sms_body", viewModel.getMessageSMS())
+        }
+        try {
             startActivity(intent)
         } catch (e: ActivityNotFoundException) {
-            Log.i("EnvoiSms", "Erreur lors de l'envoi du sms")
-            val toast = Toast.makeText(
-                context,
-                "Erreur lors de l'envoi du sms",
-                Toast.LENGTH_SHORT
-            )
-            toast.show()
-
+            Toast.makeText(this@ArticleViewFragment.context, "Erreur lors de l'envoi du message", Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun accederUrlArticle() {
+        val url: String? = viewModel.observalbleCurrentArticle.value?.url
         try {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(currentArticle.url)))
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
         } catch (e: ActivityNotFoundException) {
             val toast = Toast.makeText(
-                context,
-                "Url du cadeau : " + currentArticle.url,
+                this@ArticleViewFragment.context,
+                "Error lors de la redirection vers la page internet",
                 Toast.LENGTH_SHORT
             )
             toast.show()
         }
     }
 
-/*    private fun modifierArticle() {
-        val builder = AlertDialog.Builder(context)
-        builder.setMessage("Etes vous sûr de vouloir modifier cet article ?")
-            .setCancelable(true)
-            .setPositiveButton("Oui") { dialog, id ->
-//                    val action = ArticleViewFragmentDirections
-                val action = ArticleViewFragmentDirections.actionArticleViewFragmentToArticleEditFragment(currentArticle)
-                Navigation.findNavController(it).navigate(action)
-            }
-            .setNegativeButton("Non") { dialog, id ->
-                // Dismiss the dialog
-                dialog.dismiss()
-            }
-        val alert = builder.create()
-        alert.show()
-
-    }*/
-
-    private fun displayData() {
-        binding.article = currentArticle
-
-    }
 
 }

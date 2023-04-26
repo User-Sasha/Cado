@@ -9,6 +9,10 @@
         <variable
             name="article"
             type="com.example.cado.bo.Article" />
+        <variable
+            name="ArticleVM"
+            type="com.example.cado.ui.articleview.ArticleViewViewModele" />
+
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
