@@ -2,9 +2,11 @@ package com.example.cado.ui.articleedit
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.cado.bo.Article
 import java.time.LocalDate
 import com.example.cado.repository.ArticleRepository
+import kotlinx.coroutines.launch
 
 
 class ArticleEditViewModele: ViewModel() {
@@ -70,10 +72,11 @@ class ArticleEditViewModele: ViewModel() {
     }
 
     fun save() {
-        if (currentArticle!=null){
-            collectData()
-            ArticleRepository.replace(currentArticle!!)
+        viewModelScope.launch {
+            if (currentArticle!=null){
+                collectData()
+                ArticleRepository.replace(currentArticle!!)
+            }
         }
     }
-
 }

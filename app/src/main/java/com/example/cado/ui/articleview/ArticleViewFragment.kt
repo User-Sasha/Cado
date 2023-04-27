@@ -67,6 +67,7 @@ class ArticleViewFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.initCurrentArticle()
 
         // Inflate the layout for this fragment
         binding.checkBoxEtat.setOnClickListener {

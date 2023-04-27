@@ -9,10 +9,7 @@
         <import type="android.view.View"/>
         <import type="com.example.cado.ui.Converters"/>
         <variable
-            name="article"
-            type="com.example.cado.bo.Article" />
-        <variable
-            name="ArticleVM"
+            name="viewmodel"
             type="com.example.cado.ui.articleedit.ArticleEditViewModele" />
     </data>
     <FrameLayout
@@ -47,7 +44,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     android:hint="@string/article_addedit_intitule_hint"
-                    android:text="@{article.intitule}"/>
+                    android:text="@={viewmodel.intitule}"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -64,7 +61,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/article_addedit_description_hint"
-                    android:text="@{article.description}"/>
+                    android:text="@={viewmodel.description}"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -82,7 +79,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/article_addedit_prix_hint"
                     android:inputType="numberDecimal"
-                    android:text="@{Converters.realToString(article.prix)}"/>
+                    android:text="@{Converters.realToString(viewmodel.prix)}"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
@@ -92,8 +89,8 @@
                 android:layout_marginTop="24dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textInputLayoutPrix"
-                android:text="@{Converters.localDateToString(article.dateAchat)}"
-                android:visibility="@{article.achete ? View.VISIBLE : View.INVISIBLE}"/>
+                android:text="@{Converters.localDateToString(viewmodel.dateAchat)}"
+                android:visibility="@{viewmodel.achete ? View.VISIBLE : View.INVISIBLE}"/>
 
             <CheckBox
                 android:id="@+id/checkBoxEtat"
@@ -102,7 +99,7 @@
                 android:layout_marginTop="24dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textInputLayoutPrix"
-                android:checked="@{article.achete}"/>
+                android:checked="@{viewmodel.achete}"/>
 
             <RatingBar
                 android:id="@+id/ratingBarSatisfaction"
@@ -112,7 +109,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textViewDateAchat"
-                android:rating="@{(byte)article.niveau}"/>
+                android:rating="@{(byte)viewmodel.niveau}"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayoutUrl"
@@ -129,7 +126,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/article_addedit_url_hint"
                     android:inputType="textUri"
-                    android:text="@{article.url}"/>
+                    android:text="@{viewmodel.url}"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout

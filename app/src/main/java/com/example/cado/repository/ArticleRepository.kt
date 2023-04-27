@@ -7,13 +7,13 @@ import com.example.cado.dao.DAOType
 
 
 object ArticleRepository {
-    val articleDao: ArticleDAO? = DAOFactory.createArticleDAO(DAOType.MEMORY)
+    val articleDao: ArticleDAO? = DAOFactory.createArticleDAO(DAOType.LOCALDB)
 
     /**
      * Retourne le premier article exposé par la source de données
      * @return
      */
-    fun getArticle(id: Long): Article? {
+    suspend fun getArticle(id: Long): Article? {
         return articleDao?.selectById(id)
     }
 
@@ -21,7 +21,7 @@ object ArticleRepository {
      * Met à jour l'article à la position courante
      * @param article
      */
-    fun replace(article: Article){
+    suspend fun replace(article: Article){
         articleDao?.update(article)
     }
 

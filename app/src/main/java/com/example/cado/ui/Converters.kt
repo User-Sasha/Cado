@@ -1,6 +1,7 @@
 package com.example.cado.ui
 
 import android.text.TextUtils
+import androidx.databinding.InverseMethod
 import java.text.DecimalFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -9,7 +10,7 @@ import java.util.*
 object Converters {
 
 
-    //@InverseMethod("stringToLocalDate")
+    @InverseMethod("stringToLocalDate")
     @JvmStatic fun localDateToString(value: LocalDate?): String {
         val local: Locale = Locale.getDefault()
         val dateFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", local)
@@ -21,7 +22,7 @@ object Converters {
         return null //à compléter
     }
 
-    //@InverseMethod("stringToReal")
+    @InverseMethod("stringToReal")
     @JvmStatic fun realToString(value: Double): String? {
         val decimalFormat = DecimalFormat("#,###,###.## €")
         return decimalFormat.format(value)

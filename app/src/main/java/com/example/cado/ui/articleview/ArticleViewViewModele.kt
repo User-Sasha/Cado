@@ -2,8 +2,10 @@ package com.example.cado.ui.articleview
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.cado.bo.Article
 import com.example.cado.repository.ArticleRepository
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 class ArticleViewViewModele: ViewModel() {
@@ -14,15 +16,20 @@ class ArticleViewViewModele: ViewModel() {
     fun getCurrentArticle(): Article? = currentArticle
 
 
-    init {
-        currentArticle = ArticleRepository.getArticle(1)
-        observalbleCurrentArticle.value = currentArticle
+    fun initCurrentArticle() {
+        viewModelScope.launch {
+            currentArticle = ArticleRepository.getArticle(1)
+            observalbleCurrentArticle.value = currentArticle
+        }
     }
 
     fun OnCheckedChangeAchete(isChecked: Boolean){
         currentArticle?.achete = isChecked
         currentArticle?.dateAchat = if (currentArticle?.achete == true) LocalDate.now() else null
-        observalbleCurrentArticle.value = currentArticle
+        viewModelScope.launch {
+            ArticleRepository.replace(currentArticle!!)
+            observalbleCurrentArticle.value = currentArticle
+        }
     }
 
     fun getMessageSMS(): String {
@@ -34,32 +41,4 @@ class ArticleViewViewModele: ViewModel() {
         return contenuMessage.toString()
     }
 
-
-//    private fun getIntitule(): String? {
-//        return currentArticle.value?.intitule
-//    }
-//
-//    private fun getDescription(): String? {
-//        return currentArticle.value?.description
-//    }
-//
-//    private fun getPrix(): Double? {
-//        return currentArticle.value?.prix
-//    }
-//
-//    private fun getNiveau(): Byte? {
-//        return currentArticle.value?.niveau
-//    }
-//
-//    private fun getUrl(): String? {
-//        return currentArticle.value?.url
-//    }
-//
-//    private fun getAchete(): Boolean? {
-//        return currentArticle.value?.achete
-//    }
-//
-//    private fun getDateAchat(): LocalDate? {
-//        return currentArticle.value?.dateAchat
-//    }
 }

@@ -22,7 +22,7 @@ class ArticleDAOMemoryImpl: ArticleDAO {
         )
     }
 
-    override fun selectById(id: Long): Article? {
+    override suspend fun selectById(id: Long): Article? {
         var article: Article?=null
         try{
             article = articlesInMemory.first() { it.id == id }
@@ -32,7 +32,7 @@ class ArticleDAOMemoryImpl: ArticleDAO {
         return article
     }
 
-    override fun update(article: Article) {
+    override suspend fun update(article: Article) {
         val index: Int?
         index = articlesInMemory.indexOfFirst { it.id == article.id }
         if (index!=-1)
@@ -40,6 +40,18 @@ class ArticleDAOMemoryImpl: ArticleDAO {
         else
             Log.i(TAG, "Article non trouvé")
 
+    }
+
+    override suspend fun selectAll(): List<Article> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun delete(article: Article) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun insert(article: Article) {
+        TODO("Not yet implemented")
     }
 
 
